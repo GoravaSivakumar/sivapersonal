@@ -1,0 +1,100 @@
+<template>
+    <lightning-card title="Opportunity Products and Accounts">
+        <div class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <table class="slds-table">
+                <thead>
+                    <tr>
+                        <th>Products</th>
+                        <th>Selected Accounts</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={productAccounts} for:item="item">
+                        <tr key={item.product.Id}>
+                            <td>{item.product.Name}</td>
+                            <td>
+                                <template if:true={item.accounts.length}>
+                                    <template for:each={item.accounts} for:item="account">
+                                        <div key={account.Id} class="account-tag">
+                                            {account.Name}
+                                            <span class="remove-account" data-product-id={item.product.Id} data-account-id={account.Id} onclick={handleRemoveAccount}> X</span>
+                                        </div>
+                                    </template>
+                                </template>
+                            </td>
+                            <td>
+                                <button class="slds-button slds-button_icon slds-button_icon-border-filled" onclick={handleAddAccountClick} data-product-id={item.product.Id}>
+                                    <lightning-icon icon-name="utility:add" alternative-text="Add Account" size="small"></lightning-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+
+    <template if:true={isAccountModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={handleCloseModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="Close"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Select Accounts</h2>
+                    <div class="slds-input-has-icon slds-input-has-icon_right">
+                        <lightning-input type="search" label="Search Accounts" onchange={handleSearchAccounts}></lightning-input>
+                        <lightning-icon icon-name="utility:search" alternative-text="Search" class="slds-input__icon slds-input__icon_right"></lightning-icon>
+                    </div>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={filteredAccounts}
+                        columns={accountColumns}
+                        selected-rows={selectedAccountIds}
+                        onrowselection={handleAccountSelection}>
+                    </lightning-datatable>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={handleCloseModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleAddAccounts}>Add</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:true={isConfirmationModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close"
+                        title="Close"
+                        onclick={handleCancelDelete}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="Close">
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Confirm Deletion</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    Are you sure you want to delete this account?
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                        onclick={handleCancelDelete}>
+                        No
+                    </button>
+                    <button class="slds-button slds-button_brand"
+                        onclick={handleConfirmDelete}>
+                        Yes
+                    </button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

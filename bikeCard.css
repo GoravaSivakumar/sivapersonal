@@ -1,0 +1,30 @@
+.slds-modal__container {
+    width: 50%;
+    max-width: 60rem;
+}
+
+/* .slds-backdrop_open {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.slds-p-around_medium {
+    padding: 1rem;
+}  */
+.account-tag {
+    display: inline-block;
+    padding: 0.5em;
+    margin: 0.2em;
+    background-color: #f4f6f9;
+    border-radius: 0.25em;
+}
+
+.remove-account {
+    color: red;
+    cursor: pointer;
+    margin-left: 0.5em;
+}
+
